@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <meta charset="UTF-8">
+        <title>MyWebPage</title>
+        <style>
+            table {
+                font-family: sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+            *{
+                margin: 0px;
+                padding: 0px;
+
+            }
+            #titulo{
+                background-color: darkred;
+                padding: 5px;
+                width: 100%;
+                height: 80px;
+                line-height: 80px;
+                text-align: center;
+                font-family: quicksand,sans-serif;
+            }
+            #buscador{
+                background-color: ghostwhite;
+                padding: 5px;
+                width: 100%;
+                height: 100px;
+                text-align: center;
+                font-family: quicksand,sans-serif;
+            }
+            #resultados{
+                padding: 30px;
+                width: 100%;
+                height: 100px;
+                text-align: center;
+                color: black;
+                font-family: quicksand,sans-serif;
+            }
+            #nombre{
+                margin: 20px;
+            }
+        </style>
+        <script>
+            function GetUser(){
+                // Create an XMLHttpRequest object
+                const xhttp = new XMLHttpRequest();
+
+                // Define a callback function
+                xhttp.onload = function() {
+                    // Here you can use the Data
+                    console.log("Información recibida");
+                    var datos=  JSON.parse(this.responseText);
+                    console.log(datos);
+                    $('#resultados').empty();
+                    for (var i=0;i<datos.length;++i)
+                    {
+                        $("#resultados").append("<tr>"+
+                            "<td>"+datos[i].name+"</td>"+
+                            "<td>"+datos[i].description+"</td>"+
+                            "<td>"+datos[i].stargazers_count+"</td>"+
+                            "</tr>");
+                    }
+                }
+
+                // Send a request
+                console.log("Se envía la petición");
+                var url='https://api.github.com/users/'+document.getElementById("nombre").value+'/repos';
+                xhttp.open("GET",url, true);
+                xhttp.send();
+            }
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                $("#btn").click(GetUser)
+            });
+        </script>
+
+    </head>
+    <body>
+        <header id="titulo">
+            <h1>Buscador de repositorios</h1>
+        </header>
+        <div id="buscador">
+            <label for="nombre">Introduce el nombre de usuario:</label><br>
+            <input type="text" id="nombre"><br>
+            <input type="button" id="btn" value="buscar"><br>
+        </div>
+        <div id="repositorios">
+            <table id="tabla general">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Seguidores</th>
+                </tr>
+                </thead>
+                <tbody id="resultados">
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
